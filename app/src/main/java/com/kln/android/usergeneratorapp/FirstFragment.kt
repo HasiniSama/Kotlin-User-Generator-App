@@ -6,8 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import com.kln.android.usergeneratorapp.api.UserAPIService
 import com.kln.android.usergeneratorapp.databinding.FragmentFirstBinding
+import com.kln.android.usergeneratorapp.model.User
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -15,6 +19,7 @@ import com.kln.android.usergeneratorapp.databinding.FragmentFirstBinding
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
+    private val userAPIService = UserAPIService.create()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -34,7 +39,24 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonFirst.setOnClickListener {
+            val user = userAPIService.getUser("1");
             Log.i("First Fragment", "Success")
+
+            user.enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+
+                    val body = response.body()
+                    body?.let {
+                        Log.i("FirstFragment", it.name)
+                    }
+                }
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.i("FirstFragment", "error")
+                }
+
+            })
+
         }
     }
 
