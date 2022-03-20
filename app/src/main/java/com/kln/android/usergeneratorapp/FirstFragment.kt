@@ -1,11 +1,10 @@
 package com.kln.android.usergeneratorapp
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.kln.android.usergeneratorapp.api.UserAPIService
 import com.kln.android.usergeneratorapp.databinding.FragmentFirstBinding
 import com.kln.android.usergeneratorapp.model.User
@@ -39,20 +38,30 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonFirst.setOnClickListener {
-            val user = userAPIService.getUser("1");
-            Log.i("First Fragment", "Success")
+            val editText = binding.edittextOne.editableText
+            val user = userAPIService.getUser(editText.toString());
 
             user.enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
 
                     val body = response.body()
                     body?.let {
-                        Log.i("FirstFragment", it.name)
+                        binding.textviewThirteen.text = ""
+                        binding.textviewThree.text = it.email
+                        binding.textviewFour.text = it.name
+                        binding.textviewEleven.text = it.website
+                        binding.textviewEight.text = it.address.street
+                        binding.textviewNine.text = it.address.suite
+                        binding.textviewTen.text = it.address.city
+
+                        val phoneString = StringBuffer(it.phone)
+                        phoneString.replace(phoneString.length-7, phoneString.length, "")
+                        binding.textviewTwelve.text = phoneString
                     }
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.i("FirstFragment", "error")
+                    binding.textviewThirteen.text = "Error: Please enter a valid ID"
                 }
 
             })
