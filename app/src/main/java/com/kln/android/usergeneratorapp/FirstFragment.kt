@@ -55,8 +55,12 @@ class FirstFragment : Fragment() {
                         binding.textviewTen.text = it.address.city
 
                         val phoneString = StringBuffer(it.phone)
-                        phoneString.replace(phoneString.length-7, phoneString.length, "")
-                        binding.textviewTwelve.text = phoneString
+                        if (phoneString.contains("x")){
+                            phoneString.replace(phoneString.length-6, phoneString.length, "")
+                            binding.textviewTwelve.text = phoneString
+                        }else {
+                            binding.textviewTwelve.text = phoneString
+                        }
                     }
                 }
 
